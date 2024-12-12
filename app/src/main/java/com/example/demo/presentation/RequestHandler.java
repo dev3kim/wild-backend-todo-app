@@ -11,12 +11,12 @@ import java.util.Map;
 
 public class RequestHandler implements HttpHandler {
 
-    private final Map<String, TodoItemsContentCreator> contents = new HashMap<>();
+    private final Map<String, TodoItemsHandler> contents = new HashMap<>();
 
     public RequestHandler() {
-        this.contents.put("POST /todoItems", new TodoItemsCreateContentCreator());
-        this.contents.put("GET /todoItems", new TodoItemsGetContentCreator());
-        this.contents.put("default", new DefaultContentCreator());
+        this.contents.put(TodoItemsSaveHandler.KEY, new TodoItemsSaveHandler());
+        this.contents.put(TodoItemsGetHandler.KEY, new TodoItemsGetHandler());
+        this.contents.put(DefaultHandler.KEY, new DefaultHandler());
     }
 
     @Override
@@ -26,22 +26,20 @@ public class RequestHandler implements HttpHandler {
         URI uri = exchange.getRequestURI();
         String path = uri.getPath();
 
+        //reqeust uri 분석해서 어떤 resourceHandler가 처리해야하는지 판정
         String key = method + " " + path;
         if(!this.contents.containsKey(key)) {
-            key = "default";
+            key = DefaultHandler.KEY;
         }
 
-        TodoItemsContentCreator contentCreator = this.contents.get(key);
-        String content = contentCreator.createContent();
+        TodoItemsHandler handler = this.contents.get(key);
+        //byte -> string(json) -> dto
+        String content = handler.handle(new String(exchange.getRequestBody().readAllBytes()));
         byte[] bytes = content.getBytes();
 
         exchange.sendResponseHeaders(200, bytes.length);
         OutputStream responseBody = exchange.getResponseBody();
         responseBody.write(bytes);
         responseBody.close();
-
-        //curl -i -X POST -d '{"item": "study wildbackend", "isDone": false}' localhost:8080/todoItems
-        //json requestBody 받아서 dto로 변환
-
     }
 }

@@ -18,6 +18,17 @@ public class App {
     }
 
     public void run() throws IOException {
+        //API 설계
+        //resource: todoItems
+        //할일 등록: POST /todoItems
+        //할일 조회: GET /todoItems
+
+        /*
+            curl -i -X POST -d '{"seq": 1, "item": "study wildbackend100", "isDone": false}' localhost:8080/todoItems
+            curl -i -X GET localhost:8080/todoItems
+        */
+
+
         //curl -i localhost:8080 -> 응답없음 -> 웹서버생성
         HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 8080), -1); //주소, backlog -1 설정
         //No context found for request -> context 등록
@@ -28,11 +39,6 @@ public class App {
         httpServer.createContext("/", new RequestHandler());
 
         httpServer.start();
-
-        //API 설계
-        //resource: todoItems
-        //할일 등록: POST /todoItems
-        //할일 조회: GET /todoItems
 
         /*
         3계층
