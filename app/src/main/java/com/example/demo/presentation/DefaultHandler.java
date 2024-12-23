@@ -2,6 +2,7 @@ package com.example.demo.presentation;
 
 import org.springframework.stereotype.Component;
 
+@Deprecated
 @Component
 public class DefaultHandler implements TodoItemsHandler {
     @Override

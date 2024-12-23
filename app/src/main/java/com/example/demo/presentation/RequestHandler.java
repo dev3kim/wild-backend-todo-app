@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 @Component
 public class RequestHandler implements HttpHandler {
     private final DefaultHandler defaultHandler;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Deprecated
 @Component
 public class TodoItemsSaveHandler implements TodoItemsHandler {
     private final TodoItemService todoItemService;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+@Deprecated
 @Component
 public class Server {
     private final RequestHandler requestHandler;

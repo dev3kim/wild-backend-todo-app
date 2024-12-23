@@ -1,7 +1,9 @@
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    java
+    id("org.springframework.boot") version "3.4.1"
 }
+
+apply(plugin = "io.spring.dependency-management")
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -22,11 +24,6 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-application {
-    // Define the main class for the application.
-    mainClass = "com.example.demo.App"
 }
 
 tasks.named<Test>("test") {
