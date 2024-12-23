@@ -2,12 +2,18 @@ package com.example.demo.application;
 
 import com.example.demo.data.TodoItem;
 import com.example.demo.data.TodoItemRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class TodoItemService {
-    private final TodoItemRepository todoItemRepository = new TodoItemRepository();
+    private final TodoItemRepository todoItemRepository;
+
+    public TodoItemService(TodoItemRepository todoItemRepository) {
+        this.todoItemRepository = todoItemRepository;
+    }
 
     public List<TodoItem> save(TodoItem todoItem) {
 

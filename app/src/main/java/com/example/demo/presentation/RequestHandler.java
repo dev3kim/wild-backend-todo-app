@@ -2,6 +2,7 @@ package com.example.demo.presentation;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,14 +10,20 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class RequestHandler implements HttpHandler {
+    private final DefaultHandler defaultHandler;
+    //new 없애기
+    private final Map<String, TodoItemsHandler> handlers = new HashMap<>();
+    public RequestHandler(TodoItemsSaveHandler todoItemsSaveHandler, TodoItemsGetHandler todoItemsGetHandler, DefaultHandler defaultHandler) {
+        this.defaultHandler = defaultHandler;
+        addHandler(todoItemsSaveHandler);
+        addHandler(todoItemsGetHandler);
+        addHandler(defaultHandler);
+    }
 
-    private final Map<String, TodoItemsHandler> contents = new HashMap<>();
-
-    public RequestHandler() {
-        this.contents.put(TodoItemsSaveHandler.KEY, new TodoItemsSaveHandler());
-        this.contents.put(TodoItemsGetHandler.KEY, new TodoItemsGetHandler());
-        this.contents.put(DefaultHandler.KEY, new DefaultHandler());
+    private void addHandler(TodoItemsHandler todoItemsHandler) {
+        this.handlers.put(todoItemsHandler.getKey(), todoItemsHandler);
     }
 
     @Override
@@ -28,11 +35,11 @@ public class RequestHandler implements HttpHandler {
 
         //reqeust uri 분석해서 어떤 resourceHandler가 처리해야하는지 판정
         String key = method + " " + path;
-        if(!this.contents.containsKey(key)) {
-            key = DefaultHandler.KEY;
+        if(!this.handlers.containsKey(key)) {
+            key = defaultHandler.getKey();
         }
 
-        TodoItemsHandler handler = this.contents.get(key);
+        TodoItemsHandler handler = this.handlers.get(key);
         //byte -> string(json) -> dto
         String content = handler.handle(new String(exchange.getRequestBody().readAllBytes()));
         byte[] bytes = content.getBytes();

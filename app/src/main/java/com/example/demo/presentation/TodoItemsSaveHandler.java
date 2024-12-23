@@ -4,11 +4,24 @@ import com.example.demo.application.TodoItemService;
 import com.example.demo.data.TodoItem;
 import com.example.demo.presentation.dto.TodoItemDto;
 import com.google.gson.Gson;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class TodoItemsSaveHandler implements TodoItemsHandler {
-    public static final String KEY = "POST /todoItems";
+    private final TodoItemService todoItemService;
+    private final Gson gson;
+
+    public TodoItemsSaveHandler(TodoItemService todoItemService, Gson gson) {
+        this.todoItemService = todoItemService;
+        this.gson = gson;
+    }
+
+    @Override
+    public String getKey() {
+        return "POST /todoItems";
+    }
 
     @Override
     public String handle(String requestBody) {
@@ -17,15 +30,12 @@ public class TodoItemsSaveHandler implements TodoItemsHandler {
 
         //jackson lib import -> gradle 설정 파일에 dependency 설정   -> 코끼리 새로고침
         //gson 으로 해보자
-        Gson gson = new Gson();
         TodoItemDto todoItemDto = gson.fromJson(requestBody, TodoItemDto.class);
 
         System.out.println(requestBody);
         System.out.println(todoItemDto.toString());
 
         //save TodoItem -> application layer
-        TodoItemService todoItemService = new TodoItemService();
-
         List<TodoItem> saved = todoItemService.save(new TodoItem(todoItemDto.getSeq(), todoItemDto.getItem(), todoItemDto.isDone()));
 
         return gson.toJson(saved);

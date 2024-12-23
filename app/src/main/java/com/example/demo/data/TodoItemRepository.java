@@ -1,8 +1,11 @@
 package com.example.demo.data;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TodoItemRepository {
     private static final List<TodoItem> todoItems = new ArrayList<>();
 

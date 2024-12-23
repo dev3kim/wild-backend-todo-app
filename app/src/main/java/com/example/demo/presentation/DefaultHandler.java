@@ -1,7 +1,13 @@
 package com.example.demo.presentation;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DefaultHandler implements TodoItemsHandler {
-    public static final String KEY = "default";
+    @Override
+    public String getKey() {
+        return "default";
+    }
 
     @Override
     public String handle(String requestBody) {
